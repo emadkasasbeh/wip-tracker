@@ -8,7 +8,12 @@
   <link rel="manifest" href="/manifest.json"/>
   <style>
     *{box-sizing:border-box;margin:0;padding:0;}
-    body{font-family:'Segoe UI',sans-serif;background:#0a0f1e;color:#e2e8f0;min-height:100vh;}
+    :root {
+      --bg: #0a0f1e; --card: #111827; --card2: #1f2937;
+      --border: #1f2937; --t1: #e2e8f0; --t2: #94a3b8;
+      --t3: #4b5563; --accent: #00c8ff;
+    }
+    body{font-family:'Segoe UI',sans-serif;background:var(--bg);color:var(--t1);min-height:100vh;transition:background .2s,color .2s;}
     #root{min-height:100vh;}
   </style>
 </head>

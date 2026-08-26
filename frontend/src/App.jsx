@@ -2,6 +2,30 @@ import { useState, useEffect, useCallback } from 'react';
 
 const API = import.meta.env.VITE_API_URL || '';
 
+// ── Theme ─────────────────────────────────────────────────────────────────────
+function applyTheme(theme) {
+  const root = document.documentElement;
+  if (theme === 'light') {
+    root.style.setProperty('--bg',      '#f1f5f9');
+    root.style.setProperty('--card',    '#ffffff');
+    root.style.setProperty('--card2',   '#f8fafc');
+    root.style.setProperty('--border',  '#e2e8f0');
+    root.style.setProperty('--t1',      '#0f172a');
+    root.style.setProperty('--t2',      '#334155');
+    root.style.setProperty('--t3',      '#94a3b8');
+    root.style.setProperty('--accent',  '#0284c7');
+  } else {
+    root.style.setProperty('--bg',      '#0a0f1e');
+    root.style.setProperty('--card',    '#111827');
+    root.style.setProperty('--card2',   '#1f2937');
+    root.style.setProperty('--border',  '#1f2937');
+    root.style.setProperty('--t1',      '#e2e8f0');
+    root.style.setProperty('--t2',      '#94a3b8');
+    root.style.setProperty('--t3',      '#4b5563');
+    root.style.setProperty('--accent',  '#00c8ff');
+  }
+}
+
 // ── Helpers ───────────────────────────────────────────────────────────────────
 const token = () => localStorage.getItem('wip_token');
 const apiFetch = (url, opts={}) => fetch(API+url, {
@@ -27,13 +51,13 @@ const STATUS_COLORS = {
 
 // ── Styles ────────────────────────────────────────────────────────────────────
 const S = {
-  page:   { minHeight:'100vh', background:'#0a0f1e', color:'#e2e8f0' },
-  card:   { background:'#111827', borderRadius:14, border:'1px solid #1f2937', padding:'16px' },
+  page:   { minHeight:'100vh', background:'var(--bg)', color:'var(--t1)' },
+  card:   { background:'var(--card)', borderRadius:14, border:'1px solid var(--border)', padding:'16px' },
   btn:    (c='#00c8ff') => ({ background:c, color:'#0a0f1e', border:'none', borderRadius:10,
             padding:'12px 20px', fontWeight:700, fontSize:14, cursor:'pointer', width:'100%' }),
-  input:  { background:'#1f2937', border:'1px solid #374151', borderRadius:10, padding:'12px 14px',
-            color:'#e2e8f0', fontSize:15, width:'100%', outline:'none' },
-  label:  { fontSize:11, color:'#6b7280', letterSpacing:1.5, textTransform:'uppercase', marginBottom:6, display:'block' },
+  input:  { background:'var(--card2)', border:'1px solid var(--border)', borderRadius:10, padding:'12px 14px',
+            color:'var(--t1)', fontSize:15, width:'100%', outline:'none' },
+  label:  { fontSize:11, color:'var(--t3)', letterSpacing:1.5, textTransform:'uppercase', marginBottom:6, display:'block' },
   pill:   (c) => ({ display:'inline-block', padding:'3px 10px', borderRadius:20, fontSize:11,
             fontWeight:700, background:c+'22', color:c, border:`1px solid ${c}44` }),
 };
@@ -66,8 +90,8 @@ function Login({ onLogin }) {
           <div style={{ width:56, height:56, borderRadius:16, background:'linear-gradient(135deg,#00c8ff,#0055ff)',
             display:'flex', alignItems:'center', justifyContent:'center', margin:'0 auto 12px',
             fontSize:20, fontWeight:900, color:'#fff', boxShadow:'0 0 24px #00c8ff44' }}>CK</div>
-          <div style={{ fontSize:20, fontWeight:800, color:'#e2e8f0' }}>WIP Tracker</div>
-          <div style={{ fontSize:12, color:'#6b7280', marginTop:4 }}>Changan Kuwait · Service</div>
+          <div style={{ fontSize:20, fontWeight:800, color:'var(--t1)' }}>WIP Tracker</div>
+          <div style={{ fontSize:12, color:'var(--t3)', marginTop:4 }}>Changan Kuwait · Service</div>
         </div>
 
         <div style={{...S.card}}>
@@ -129,13 +153,13 @@ function WIPCard({ wip, onUpdate, isSupervisor }) {
         <div>
           <div style={{ fontWeight:800, fontSize:17, color:'#00c8ff' }}>#{wip.wip_no}</div>
           <div style={{ fontSize:13, color:'#9ca3af', marginTop:2 }}>{wip.plate_no} · {wip.model}</div>
-          {isSupervisor && <div style={{ fontSize:11, color:'#6b7280', marginTop:2 }}>👤 {wip.sa_name}</div>}
+          {isSupervisor && <div style={{ fontSize:11, color:'var(--t3)', marginTop:2 }}>👤 {wip.sa_name}</div>}
         </div>
         <div style={{ textAlign:'right' }}>
           <div style={{ ...S.pill(ageColor(daysAged)), fontSize:13, fontWeight:900, padding:'4px 12px' }}>
             {daysAged}d
           </div>
-          <div style={{ fontSize:10, color:'#6b7280', marginTop:4 }}>{wip.branch?.toUpperCase()}</div>
+          <div style={{ fontSize:10, color:'var(--t3)', marginTop:4 }}>{wip.branch?.toUpperCase()}</div>
         </div>
       </div>
 
@@ -143,7 +167,7 @@ function WIPCard({ wip, onUpdate, isSupervisor }) {
       <div style={{ display:'flex', alignItems:'center', gap:8, marginBottom:10, flexWrap:'wrap' }}>
         <span style={S.pill(statCol)}>{curStatus}</span>
         {wip.last_updated && (
-          <span style={{ fontSize:10, color:'#6b7280' }}>
+          <span style={{ fontSize:10, color:'var(--t3)' }}>
             Updated {new Date(wip.last_updated).toLocaleDateString('en-GB',{day:'2-digit',month:'short'})} by {wip.updated_by}
           </span>
         )}
@@ -151,7 +175,7 @@ function WIPCard({ wip, onUpdate, isSupervisor }) {
 
       {/* Latest note */}
       {wip.latest_note && (
-        <div style={{ background:'#1f2937', borderRadius:8, padding:'8px 12px', marginBottom:10,
+        <div style={{ background:'var(--card2)', borderRadius:8, padding:'8px 12px', marginBottom:10,
           fontSize:12, color:'#9ca3af', fontStyle:'italic' }}>
           📋 {wip.latest_note}
         </div>
@@ -160,20 +184,20 @@ function WIPCard({ wip, onUpdate, isSupervisor }) {
       {/* Actions */}
       <div style={{ display:'flex', gap:8 }}>
         <button onClick={() => setOpen(v=>!v)}
-          style={{ flex:1, background:'#1f2937', border:'1px solid #374151', borderRadius:8,
-            padding:'9px', color:'#e2e8f0', fontWeight:700, fontSize:13, cursor:'pointer' }}>
+          style={{ flex:1, background:'var(--card2)', border:'1px solid var(--border)', borderRadius:8,
+            padding:'9px', color:'var(--t1)', fontWeight:700, fontSize:13, cursor:'pointer' }}>
           {open ? '✕ Cancel' : '✏️ Update Status'}
         </button>
         <button onClick={loadHistory}
-          style={{ background:'#1f2937', border:'1px solid #374151', borderRadius:8,
-            padding:'9px 14px', color:'#6b7280', fontSize:12, cursor:'pointer' }}>
+          style={{ background:'var(--card2)', border:'1px solid var(--border)', borderRadius:8,
+            padding:'9px 14px', color:'var(--t3)', fontSize:12, cursor:'pointer' }}>
           🕐
         </button>
       </div>
 
       {/* Update form */}
       {open && (
-        <div style={{ marginTop:12, borderTop:'1px solid #1f2937', paddingTop:12 }}>
+        <div style={{ marginTop:12, borderTop:'1px solid var(--border)', paddingTop:12 }}>
           <label style={S.label}>New Status</label>
           <select value={newStatus} onChange={e=>setNewStatus(e.target.value)}
             style={{...S.input, marginBottom:10, cursor:'pointer'}}>
@@ -192,19 +216,19 @@ function WIPCard({ wip, onUpdate, isSupervisor }) {
 
       {/* History */}
       {showHist && history && (
-        <div style={{ marginTop:10, borderTop:'1px solid #1f2937', paddingTop:10 }}>
-          <div style={{ fontSize:11, color:'#6b7280', marginBottom:8, letterSpacing:1 }}>UPDATE HISTORY</div>
-          {history.length === 0 && <div style={{ fontSize:12, color:'#6b7280' }}>No updates yet</div>}
+        <div style={{ marginTop:10, borderTop:'1px solid var(--border)', paddingTop:10 }}>
+          <div style={{ fontSize:11, color:'var(--t3)', marginBottom:8, letterSpacing:1 }}>UPDATE HISTORY</div>
+          {history.length === 0 && <div style={{ fontSize:12, color:'var(--t3)' }}>No updates yet</div>}
           {history.map((h,i) => (
             <div key={i} style={{ fontSize:12, marginBottom:8, paddingBottom:8,
               borderBottom: i<history.length-1 ? '1px solid #1f2937' : 'none' }}>
               <div style={{ display:'flex', justifyContent:'space-between' }}>
                 <span style={{ color:'#00c8ff', fontWeight:700 }}>{h.new_status}</span>
-                <span style={{ color:'#6b7280', fontSize:11 }}>
+                <span style={{ color:'var(--t3)', fontSize:11 }}>
                   {new Date(h.updated_at).toLocaleString('en-GB',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'})}
                 </span>
               </div>
-              <div style={{ color:'#6b7280', marginTop:2 }}>by {h.updated_by}</div>
+              <div style={{ color:'var(--t3)', marginTop:2 }}>by {h.updated_by}</div>
               {h.note && <div style={{ color:'#9ca3af', fontStyle:'italic', marginTop:3 }}>"{h.note}"</div>}
             </div>
           ))}
@@ -249,12 +273,12 @@ function SupervisorPanel({ onClose }) {
   };
 
   return (
-    <div style={{ position:'fixed', inset:0, background:'#0a0f1eee', zIndex:100,
+    <div style={{ position:'fixed', inset:0, background:'color-mix(in srgb, var(--bg) 92%, transparent)', zIndex:100,
       overflowY:'auto', padding:16 }}>
       <div style={{ maxWidth:500, margin:'0 auto' }}>
         <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:16 }}>
           <div style={{ fontWeight:800, fontSize:18 }}>👥 User Management</div>
-          <button onClick={onClose} style={{ background:'#1f2937', border:'none', color:'#9ca3af',
+          <button onClick={onClose} style={{ background:'var(--card2)', border:'none', color:'#9ca3af',
             borderRadius:8, padding:'6px 12px', cursor:'pointer', fontSize:14 }}>✕</button>
         </div>
 
@@ -286,10 +310,10 @@ function SupervisorPanel({ onClose }) {
           <div style={{ fontWeight:700, marginBottom:12, color:'#00c8ff' }}>Current Users</div>
           {users.map(u => (
             <div key={u.id} style={{ display:'flex', alignItems:'center', gap:10, marginBottom:10,
-              paddingBottom:10, borderBottom:'1px solid #1f2937' }}>
+              paddingBottom:10, borderBottom:'1px solid var(--border)' }}>
               <div style={{ flex:1 }}>
                 <div style={{ fontWeight:700, fontSize:14 }}>{u.sa_name}</div>
-                <div style={{ fontSize:11, color:'#6b7280' }}>{u.role} · {u.active?'Active':'Inactive'}</div>
+                <div style={{ fontSize:11, color:'var(--t3)' }}>{u.role} · {u.active?'Active':'Inactive'}</div>
               </div>
               {resetId===u.id ? (
                 <div style={{ display:'flex', gap:6 }}>
@@ -300,13 +324,13 @@ function SupervisorPanel({ onClose }) {
                     style={{ background:'#10d97e', border:'none', borderRadius:8, padding:'6px 10px',
                       color:'#0a0f1e', fontWeight:700, cursor:'pointer', fontSize:12 }}>✓</button>
                   <button onClick={()=>setResetId(null)}
-                    style={{ background:'#1f2937', border:'none', borderRadius:8, padding:'6px 10px',
+                    style={{ background:'var(--card2)', border:'none', borderRadius:8, padding:'6px 10px',
                       color:'#9ca3af', cursor:'pointer', fontSize:12 }}>✕</button>
                 </div>
               ) : (
                 <div style={{ display:'flex', gap:6 }}>
                   <button onClick={()=>setResetId(u.id)}
-                    style={{ background:'#1f2937', border:'1px solid #374151', borderRadius:8,
+                    style={{ background:'var(--card2)', border:'1px solid var(--border)', borderRadius:8,
                       padding:'5px 10px', color:'#9ca3af', cursor:'pointer', fontSize:11 }}>🔑 PIN</button>
                   <button onClick={()=>toggleUser(u.id)}
                     style={{ background: u.active?'#ef444420':'#10d97e20',
@@ -325,7 +349,7 @@ function SupervisorPanel({ onClose }) {
 }
 
 // ── Main Dashboard ────────────────────────────────────────────────────────────
-function Dashboard({ user, onLogout }) {
+function Dashboard({ user, onLogout, theme, onToggleTheme }) {
   const [wips,       setWips]       = useState([]);
   const [opts,       setOpts]       = useState([]);
   const [loading,    setLoading]    = useState(true);
@@ -369,24 +393,24 @@ function Dashboard({ user, onLogout }) {
       {showPanel && <SupervisorPanel onClose={()=>setShowPanel(false)}/>}
 
       {/* Top bar */}
-      <div style={{ background:'#111827', borderBottom:'1px solid #1f2937', padding:'12px 16px',
+      <div style={{ background:'var(--card)', borderBottom:'1px solid var(--border)', padding:'12px 16px',
         display:'flex', alignItems:'center', justifyContent:'space-between', position:'sticky', top:0, zIndex:50 }}>
         <div style={{ display:'flex', alignItems:'center', gap:10 }}>
           <div style={{ width:32, height:32, borderRadius:8, background:'linear-gradient(135deg,#00c8ff,#0055ff)',
             display:'flex', alignItems:'center', justifyContent:'center', fontWeight:900, fontSize:11, color:'#fff' }}>CK</div>
           <div>
             <div style={{ fontWeight:800, fontSize:14 }}>WIP Tracker</div>
-            <div style={{ fontSize:10, color:'#6b7280' }}>{user.sa_name} · {user.role}</div>
+            <div style={{ fontSize:10, color:'var(--t3)' }}>{user.sa_name} · {user.role}</div>
           </div>
         </div>
         <div style={{ display:'flex', gap:8 }}>
           {isSupervisor && (
             <button onClick={()=>setShowPanel(true)}
-              style={{ background:'#1f2937', border:'1px solid #374151', borderRadius:8,
+              style={{ background:'var(--card2)', border:'1px solid var(--border)', borderRadius:8,
                 padding:'6px 12px', color:'#9ca3af', cursor:'pointer', fontSize:12 }}>👥</button>
           )}
           <button onClick={load}
-            style={{ background:'#1f2937', border:'1px solid #374151', borderRadius:8,
+            style={{ background:'var(--card2)', border:'1px solid var(--border)', borderRadius:8,
               padding:'6px 12px', color:'#9ca3af', cursor:'pointer', fontSize:12 }}>↻</button>
           <button onClick={()=>{ localStorage.removeItem('wip_token'); onLogout(); }}
             style={{ background:'#ef444420', border:'1px solid #ef444444', borderRadius:8,
@@ -404,7 +428,7 @@ function Dashboard({ user, onLogout }) {
           ].map(k => (
             <div key={k.label} style={{...S.card, textAlign:'center', padding:'12px 8px'}}>
               <div style={{ fontWeight:900, fontSize:24, color:k.color }}>{k.value}</div>
-              <div style={{ fontSize:10, color:'#6b7280', marginTop:2 }}>{k.label}</div>
+              <div style={{ fontSize:10, color:'var(--t3)', marginTop:2 }}>{k.label}</div>
             </div>
           ))}
         </div>
@@ -429,15 +453,15 @@ function Dashboard({ user, onLogout }) {
         </div>
 
         {/* WIP count */}
-        <div style={{ fontSize:12, color:'#6b7280', marginBottom:12 }}>
+        <div style={{ fontSize:12, color:'var(--t3)', marginBottom:12 }}>
           Showing {filtered.length} of {wips.length} WIPs
         </div>
 
         {/* WIP cards */}
         {loading ? (
-          <div style={{ textAlign:'center', color:'#6b7280', padding:40 }}>Loading WIPs…</div>
+          <div style={{ textAlign:'center', color:'var(--t3)', padding:40 }}>Loading WIPs…</div>
         ) : filtered.length === 0 ? (
-          <div style={{ textAlign:'center', color:'#6b7280', padding:40 }}>No WIPs found</div>
+          <div style={{ textAlign:'center', color:'var(--t3)', padding:40 }}>No WIPs found</div>
         ) : (
           filtered.map(w => (
             <WIPCard key={w.id} wip={w} onUpdate={load} isSupervisor={isSupervisor}/>
@@ -450,6 +474,13 @@ function Dashboard({ user, onLogout }) {
 
 // ── Root App ──────────────────────────────────────────────────────────────────
 export default function App() {
+  const [theme, setTheme] = useState(() => localStorage.getItem('wip_theme') || 'dark');
+
+  useEffect(() => {
+    applyTheme(theme);
+    localStorage.setItem('wip_theme', theme);
+  }, [theme]);
+
   const [user, setUser] = useState(() => {
     const t = localStorage.getItem('wip_token');
     if (!t) return null;
@@ -461,5 +492,5 @@ export default function App() {
   });
 
   if (!user) return <Login onLogin={setUser}/>;
-  return <Dashboard user={user} onLogout={()=>setUser(null)}/>;
+  return <Dashboard user={user} onLogout={()=>setUser(null)} theme={theme} onToggleTheme={()=>setTheme(t=>t==='dark'?'light':'dark')}/>;
 }
