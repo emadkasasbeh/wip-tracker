@@ -409,6 +409,9 @@ function Dashboard({ user, onLogout, theme, onToggleTheme }) {
               style={{ background:'var(--card2)', border:'1px solid var(--border)', borderRadius:8,
                 padding:'6px 12px', color:'#9ca3af', cursor:'pointer', fontSize:12 }}>👥</button>
           )}
+          <button onClick={onToggleTheme}
+            style={{ background:'var(--card2)', border:'1px solid var(--border)', borderRadius:8,
+              padding:'6px 12px', cursor:'pointer', fontSize:14 }}>{theme==='dark'?'☀️':'🌙'}</button>
           <button onClick={load}
             style={{ background:'var(--card2)', border:'1px solid var(--border)', borderRadius:8,
               padding:'6px 12px', color:'#9ca3af', cursor:'pointer', fontSize:12 }}>↻</button>
