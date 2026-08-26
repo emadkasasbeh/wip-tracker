@@ -1,0 +1,9 @@
+{
+  "name": "WIP Tracker — Changan Kuwait",
+  "short_name": "WIP Tracker",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a0f1e",
+  "theme_color": "#00c8ff",
+  "icons": []
+}

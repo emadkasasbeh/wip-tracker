@@ -1,0 +1,5 @@
+[phases.build]
+cmds = ["cd frontend && npm install && npm run build && cd ../backend && npm install && cp -r ../frontend/dist ./public"]
+
+[start]
+cmd = "cd backend && node server.js"
